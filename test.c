@@ -6,144 +6,147 @@
 /*   By: tmack <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/28 07:14:40 by tmack             #+#    #+#             */
-/*   Updated: 2016/09/28 17:02:19 by tmack            ###   ########.fr       */
+/*   Updated: 2016/09/29 13:35:10 by tmack            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "test.h"
 # include <math.h>
 
-
-void		draw(t_win *win)
+void		init_m(t_frac *m)
 {
-	double	c_re;
-	double	c_im;
-	double	x = 0;
-	double	y = 0;
-	int		row = -1;
-	int iteration = 0;
-	double x_new ;
-
-	win->img = mlx_new_image(win->init, WIN_W, WIN_H);
-	win->data = mlx_get_data_addr(win->img, &(win->bpp), &(win->size),
-			&(win->end));
-	while (++row < WIN_H)
-   	{
-		int col = -1;
-		while (++col < WIN_W)
-		{
-			c_re = ((col - (WIN_W * win->z_x) / (2.0 + win->i_x)) * (4.0 * win->z_x) / WIN_W);
-			c_im = ((row - (WIN_H * win->z_x) / 2.0 ) * (4.0 * win->z_x) / WIN_W);
-			x = 0;
-			y = 0;
-			iteration = 0;
-			while (x * x + y * y <= 4 && iteration < MAX_S) 
-			{
-				x_new = x * x - y * y + c_re;
-				y = 2 * x * y + c_im;
-				x = x_new;
-				iteration++;
-			if (iteration < MAX_S)
-			{
-				win->data[((int)col * (win->bpp / 8)) + ((int)row * win->size)] =
-					(iteration * 20) % 256;
-				win->data[((int)col * (win->bpp / 8)) + ((int)row * win->size) + 1] =
-					(iteration * iteration) % 256;
-				win->data[((int)col * (win->bpp / 8)) + ((int)row * win->size) + 2] =
-				((int)(sin(iteration))) % 256;
-			}
-			else
-			{
-				win->data[((int)col * (win->bpp / 8)) + ((int)row * win->size)] = 255;
-				win->data[((int)col * (win->bpp / 8)) + ((int)row * win->size) + 1] = 255;
-				win->data[((int)col * (win->bpp / 8)) + ((int)row * win->size) + 2] = 255;
-			}
-			}
-		}
-	}
-	mlx_put_image_to_window(win->init, win->win, win->img, 0, 0);
+	m->s_x_max = 800;
+	m->s_y_max = 600;
+	m->w_x_min = -2.50;
+	m->w_x_max = 2.00;
+	m->w_y_min = -2.00;
+	m->w_y_max = 4.00;
+	m->iterate_max = 400;
+	m->e_rad = 2.00;
+	m->e_rad2 = m->e_rad * m->e_rad;
 }
 
-int		mouse_hook(int	keycode, int x, int y,  t_win *win)
+void	calc_img(t_frac *m)
+{
+	m->w_x = m->w_x_min + (m->pan_x + m->s_x) * m->px_width;
+	m->zx = 0.0;
+	m->zy = 0.0;
+	m->zx2 = m->zx * m->zx;
+	m->zy2 = m->zy * m->zy;
+	m->iterate = -1;
+	while (++m->iterate < m->iterate_max && ((m->zx2 + m->zy2) < m->e_rad2 ))
+	{
+		m->zy = 2 * m->zx * m->zy + m->w_y;
+		m->zx = m->zx2 - m->zy2 + m->w_x;
+		m->zx2 = m->zx * m->zx;
+		m->zy2 = m->zy * m->zy;
+	}
+}
+
+void	set_img(t_frac *m)
+{
+	m->img = mlx_new_image(m->init, m->s_x_max, m->s_y_max);
+	m->data = mlx_get_data_addr(m->img, &(m->bpp), &(m->size),
+			&(m->end));
+	m->px_width = ((m->w_x_max) - m->w_x_min) / (m->s_x_max + m->zoom);
+	m->px_height = ((m->w_y_max) - m->w_y_min) / (m->s_y_max + m->zoom);
+	m->s_y = -1;
+}
+
+void	set_attrb(t_frac *m)
+{
+	m->s_x = -1;
+	while (++m->s_x < m->s_x_max)
+	{
+		calc_img(m);
+		if (m->iterate < m->iterate_max)
+		{
+			m->data[(m->s_x * (m->bpp / 8)) + (m->s_y * m->size)] =
+				(m->iterate * 20) % 256;
+			m->data[(m->s_x * (m->bpp / 8)) + (m->s_y * m->size) + 1] =
+				(m->iterate * m->iterate) % 256;
+			m->data[(m->s_x * (m->bpp / 8)) + (m->s_y * m->size) + 2] =
+				((int)(sin(m->iterate))) % 256;
+		}
+		else
+		{
+			m->data[(m->s_x * (m->bpp / 8)) + (m->s_y * m->size)] = 255;
+			m->data[(m->s_x * (m->bpp / 8)) + (m->s_y * m->size) + 1] = 255;
+			m->data[(m->s_x * (m->bpp / 8)) + (m->s_y * m->size) + 2] = 255;
+		}
+	}
+}
+
+void		draw(t_frac *m)
+{
+	set_img(m);
+	while(++m->s_y < m->s_y_max)
+	{
+		m->w_y = m->w_y_min + (m->pan_y + m->s_y) * m->px_height;
+		if (fabs(m->w_y) < (m->px_height / 2))
+			m->w_y = 0;
+		set_attrb(m);
+	}
+	mlx_put_image_to_window(m->init, m->win, m->img, 0, 0);
+}
+
+int		mouse_hook(int	keycode, int x, int y, t_frac *m)
 {
 	if (keycode == 4)
 	{
-		win->z_x = (win->z_x + 0.1) * 0.75 ;
-		mlx_destroy_image(win->init, win->img);
-		draw(win);
+		m->zoom += 200;
+		m->pan_x += (x - (m->s_x / 2));
+		m->pan_y += (y - (m->s_y / 2));
 	}
-
 	if (keycode == 5)
 	{
-		win->z_x = (win->z_x + 0.1) / 0.75;
-		mlx_destroy_image(win->init, win->img);
-		draw(win);
+		m->zoom -= 200;
+		m->pan_x += (x - (m->s_x / 2));
+		m->pan_y += (y - (m->s_y / 2));
 	}
+	draw(m);
+	mlx_destroy_image(m->init, m->img);
 	return(0);
 }
 
-int     key_hook(int keycode, t_win *win)
+int     key_hook(int keycode, t_frac *win)
 {
 	if (keycode == 53)
 		exit(0);
 	if (keycode == 123)
-	{
-		win->i_x += 1;
-		mlx_destroy_image(win->init, win->img);
-		draw(win);
-	}
+		win->pan_x += 30;
 	if (keycode == 124)
-	{
-		win->i_x -= 1;
-		mlx_destroy_image(win->init, win->img);
-		draw(win);
-	}
+		win->pan_x -= 30;
 	if (keycode == 126)
-	{
-		win->z_x += 0.5;
-		mlx_destroy_image(win->init, win->img);
-		draw(win);
-	}
+		win->pan_y += 30;
 	if (keycode == 125)
-	{
-		win->z_x -= 0.5;
-		mlx_destroy_image(win->init, win->img);
-		draw(win);
-	}
+		win->pan_y -= 30;
+	draw(win);
 	return (0);
 }
 
-void		init(t_win *win)
+void	main_init(t_frac *win)
 {
-	win->bpp = 0;
+	win->zoom = 0;
+	win->pan_y = 0;
+	win->pan_x = 0;
 	win->size = 0;
+	win->bpp = 0;
 	win->end = 0;
-	win->i_x = 0;
-	win->z_x = 0;
-	win->z_y = 0;
-	win->i_y = 0;
-}
-
-void   main_init(t_win *win)
-{
-	init(win);
+	init_m(win);
 	win->data = NULL;
-	win->a = 0.00;
-	win->b = 0.00;
-	win->x = 0.00;
-	win->y = 0.00;
 	win->init = mlx_init();
-	win->win = mlx_new_window(win->init, 480, 600, "fractol");
+	win->win = mlx_new_window(win->init, 800, 600, "fractol");
 	draw(win);
 	mlx_key_hook(win->win, key_hook, win);
 	mlx_mouse_hook(win->win, mouse_hook, win);
 }
 
-int main()
+int		main()
 {
-	t_win	win;
+	t_frac	m;
 
-	main_init(&win);
-	mlx_loop(win.init);
+	main_init(&m);
+	mlx_loop(m.init);
 }
 
