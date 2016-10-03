@@ -12,7 +12,7 @@ all: $(NAME)
 
 $(NAME):
 	@make -C $(LIBDIR)
-	@gcc $(FLAGS) -o $(NAME) $(SRC) $(LIB) -lmlx -framework OpenGL -framework AppKit
+	@gcc $(FLAGS) -o $(NAME) $(SRC) $(LIB) -L/usr/X11/lib -lmlx -lXext -lX11 -lm -g 
 
 clean:
 	 @make clean -C $(LIBDIR)

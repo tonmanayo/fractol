@@ -55,6 +55,7 @@ typedef struct		s_frac
 ** imagenary numbers z = zx + zy * i 2zx = zx^2
 */
 	double			zx;
+    double          z_tmp;
 	double			zy;
 	double			zx2;
 	double			zy2;
@@ -82,12 +83,15 @@ typedef struct		s_frac
 /*
 ** mandle functions
 */
-
+void    set_colour(t_frac *m);
 void	set_img(t_frac *m);
 void	calc_img(t_frac *m);
 void	set_attrb(t_frac *m);
-void	draw(t_frac *m);
+void	mandelbrot(t_frac *m);
 int		mouse_hook(int  keycode, int x, int y, t_frac *m);
 int		key_hook(int keycode, t_frac *win);
 int     mouse_move(int x, int y, t_frac *m);
 void	julia(t_frac *m);
+void    init_mandle(t_frac *m);
+void    init_julia(t_frac *m);
+

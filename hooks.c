@@ -14,47 +14,55 @@
 
 int     mouse_hook(int  keycode, int x, int y, t_frac *m)
 {
-	if (keycode == 4)
-	{
-		m->zoom += 0.5;
-		m->iterate_max++;
-//		m->pan_x += (x - (m->s_x / 2));
-//		m->pan_y += (y - (m->s_y / 2));
-	}
-	if (keycode == 5)
-	{
-		m->zoom -= 0.5;
-//		m->pan_x += (x - (m->s_x / 2));
-//		m->pan_y += (y - (m->s_y / 2));
-	}
-	mlx_destroy_image(m->init, m->img);
-	julia(m);
-//	draw(m);
-	return(0);
+    if (keycode == 4)
+    {
+        m->iterate_max++;
+        m->pan_x += (((double)x - m->s_y_max / 2) / m->s_x_max / 2) / m->zoom * 10;
+        m->pan_y += (((double)y - m->s_x_max / 2) / m->s_y_max / 2 )/ m->zoom * 10;
+        m->zoom *= 1.1;
+    }
+    if (keycode == 5)
+    {
+        m->pan_x += (((double)x - m->s_y_max / 2) / m->s_x_max / 2) / m->zoom * 10;
+        m->pan_y += (((double)y - m->s_x_max / 2) / m->s_y_max / 2) / m->zoom * 10;
+        m->zoom /= 1.1;
+    }
+    //	mlx_destroy_image(m->init, m->img);
+     julia(m);
+   // mandelbrot(m);
+    return(0);
 }
 
 int     key_hook(int keycode, t_frac *win)
 {
-	if (keycode == 53)
-		exit(0);
-/*	if (keycode == 123)
-		win->pan_x += 30;
-	if (keycode == 124)
-		win->pan_x -= 30;
-	if (keycode == 126)
-		win->pan_y += 30;
-	if (keycode == 125)
-		win->pan_y -= 30;*/
-	julia(win);
-//	draw(win);
-	return (0);
+    printf("%i\n", keycode);
+    if (keycode == 65307) //53 exit
+        exit(0);
+    if (keycode == 65361) //123 right
+        win->pan_x += 10 / (win->zoom * 20 );
+    if (keycode == 65363) //124 left
+        win->pan_x -= 10 / (win->zoom * 20 );
+    if (keycode == 65362) // 126 up
+        win->pan_y += 10 / (win->zoom * 20 );
+    if (keycode == 65364) // 125 down
+        win->pan_y -= 10 / (win->zoom * 20 );
+     julia(win);
+  //  mandelbrot(win);
+    return (0);
 }
 
 int		mouse_move(int x, int y, t_frac *m)
 {
-	m->m_x = (x - (m->s_x / 2)) * 0.5;
-	m->m_y = (y - (m->s_y / 2)) * 0.5;
-	mlx_destroy_image(m->init, m->img);
-	julia(m);
-	return (0);
+
+    if (x >= 0 && y >= 0 && x <= m->s_x_max && y <= m->s_y_max)
+    {
+   //     m->w_x = (double)x / (double)m->s_x_max * 4 - 2;
+     //   m->w_y = (double)y / (double)m->s_y_max * 4 - 2;
+      m->m_x = (x - (m->s_x / 2)) * 0.5;
+    m->m_y = (y - (m->s_y / 2)) * 0.5;
+    //	mlx_destroy_image(m->init, m->img);
+    // julia(m);
+    }
+     //   mandelbrot(m);
+    return (0);
 }

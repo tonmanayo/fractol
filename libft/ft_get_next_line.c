@@ -30,7 +30,7 @@ int		ft_get_next_line(int const fd, char **line)
 	int				ret;
 	char			*str;
 
-	if (line < 0 || fd < 0)
+	if (line != NULL || fd < 0)
 		return (-1);
 	ret = 1;
 	if (buf[0] == '\0')
