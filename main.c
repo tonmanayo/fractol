@@ -40,7 +40,19 @@ void        init_julia(t_frac *m)
 
 }
 
-void	main_init(t_frac *win)
+void    chose_fractal(t_frac *m)
+{
+    if (ft_strcmp(m->argv, "mandelbrot") == 0)
+        mandelbrot(m);
+    else if (ft_strcmp(m->argv, "julia") == 0 )
+        julia(m);
+    else
+        printf("error: invalid argument!");
+}
+
+
+
+void	main_init(t_frac *win, char  **argv)
 {
     win->m_x = 0;
     win->m_y = 0;
@@ -50,21 +62,22 @@ void	main_init(t_frac *win)
     win->size = 0;
     win->bpp = 0;
     win->end = 0;
+    win->argv = strdup(argv[1]);
     win->data = NULL;
     win->init = mlx_init();
     win->win = mlx_new_window(win->init, 800, 600, "fractol");
-    	julia(win);
-   // mandelbrot(win);
+    chose_fractal(win);
+    // mandelbrot(win);
     mlx_key_hook(win->win, key_hook, win);
     mlx_mouse_hook(win->win, mouse_hook, win);
     //	mlx_hook(win->win, 6, (1L<<6), mouse_move, win); 
     mlx_loop(win->init);
 }
 
-int		main()
+int		main(int argc, char **argv)
 {
     t_frac	m;
 
-    main_init(&m);
+    main_init(&m, argv);
 }
 

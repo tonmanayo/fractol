@@ -10,10 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+# include <unistd.h>
 # include <mlx.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
+#include "libft/libft.h"
 
 # define WIN_H 800
 # define WIN_W 600
@@ -23,6 +25,7 @@ typedef struct		s_frac
 /*
 ** minilibX
 */
+    char            *argv;
 	void			*init;
 	void			*win;
 	void			*img;
@@ -94,4 +97,5 @@ int     mouse_move(int x, int y, t_frac *m);
 void	julia(t_frac *m);
 void    init_mandle(t_frac *m);
 void    init_julia(t_frac *m);
+void    chose_fractal(t_frac *m);
 

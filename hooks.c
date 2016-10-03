@@ -27,8 +27,9 @@ int     mouse_hook(int  keycode, int x, int y, t_frac *m)
         m->pan_y += (((double)y - m->s_x_max / 2) / m->s_y_max / 2) / m->zoom * 10;
         m->zoom /= 1.1;
     }
+     chose_fractal(m);
     //	mlx_destroy_image(m->init, m->img);
-     julia(m);
+    // julia(m);
    // mandelbrot(m);
     return(0);
 }
@@ -46,7 +47,8 @@ int     key_hook(int keycode, t_frac *win)
         win->pan_y += 10 / (win->zoom * 20 );
     if (keycode == 65364) // 125 down
         win->pan_y -= 10 / (win->zoom * 20 );
-     julia(win);
+     chose_fractal(win);
+    // julia(win);
   //  mandelbrot(win);
     return (0);
 }
