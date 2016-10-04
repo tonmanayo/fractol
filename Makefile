@@ -2,7 +2,9 @@ NAME = fractol
 SRC = main.c \
 	  mandle.c \
 	  hooks.c \
-	  julia.c
+	  julia.c \
+	  mandle3.c
+			
 	
 LIBDIR = libft
 LIB = libft/libft.a
@@ -12,7 +14,7 @@ all: $(NAME)
 
 $(NAME):
 	@make -C $(LIBDIR)
-	@gcc $(FLAGS) -o $(NAME) $(SRC) $(LIB) -L/usr/X11/lib -lmlx -lXext -lX11 -lm -g 
+	@gcc $(FLAGS) -o $(NAME) $(SRC) $(LIB) -lmlx -framework OpenGL -framework AppKit 
 
 clean:
 	 @make clean -C $(LIBDIR)

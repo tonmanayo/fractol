@@ -6,10 +6,10 @@
 /*   By: tmack <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/28 10:43:10 by tmack             #+#    #+#             */
-/*   Updated: 2016/09/30 12:05:43 by tmack            ###   ########.fr       */
+/*   Updated: 2016/10/04 12:21:42 by tmack            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+// -L/usr/X11/lib -lmlx -lXext -lX11 -lm -g
 # include <unistd.h>
 # include <mlx.h>
 # include <stdio.h>
@@ -62,6 +62,8 @@ typedef struct		s_frac
 	double			zy;
 	double			zx2;
 	double			zy2;
+	double			zy3;
+	double			zx3;
 /*
 ** depth by itteration
 */
@@ -86,9 +88,9 @@ typedef struct		s_frac
 /*
 ** mandle functions
 */
+int		expose(t_frac *m);
 void    set_colour(t_frac *m);
 void	set_img(t_frac *m);
-void	calc_img(t_frac *m);
 void	set_attrb(t_frac *m);
 void	mandelbrot(t_frac *m);
 int		mouse_hook(int  keycode, int x, int y, t_frac *m);
@@ -98,4 +100,5 @@ void	julia(t_frac *m);
 void    init_mandle(t_frac *m);
 void    init_julia(t_frac *m);
 void    chose_fractal(t_frac *m);
+void    mandelbrot_three(t_frac *m);
 
