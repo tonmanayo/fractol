@@ -6,14 +6,14 @@
 /*   By: tmack <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/30 07:40:42 by tmack             #+#    #+#             */
-/*   Updated: 2016/10/04 12:22:51 by tmack            ###   ########.fr       */
+/*   Updated: 2016/10/05 07:02:20 by tmack            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 #include <math.h>
 
-void		init_mandle(t_frac *m)
+void	init_mandle(t_frac *m)
 {
 	m->s_x_max = 800;
 	m->s_y_max = 600;
@@ -26,7 +26,7 @@ void		init_mandle(t_frac *m)
 	m->e_rad2 = m->e_rad * m->e_rad;
 }
 
-void        init_julia(t_frac *m)
+void	init_julia(t_frac *m)
 {
 	m->w_x_min = -0.7;
 	m->w_x_max = 0.27015;
@@ -37,10 +37,9 @@ void        init_julia(t_frac *m)
 	m->iterate_max = 200;
 	m->e_rad = 2.00;
 	m->e_rad2 = m->e_rad * m->e_rad;
-
 }
 
-void    chose_fractal(t_frac *m)
+void	chose_fractal(t_frac *m)
 {
 	if (ft_strcmp(m->argv, "mandelbrot") == 0)
 	{
@@ -48,13 +47,13 @@ void    chose_fractal(t_frac *m)
 			mlx_destroy_image(m->init, m->img);
 		mandelbrot(m);
 	}
-	else if (ft_strcmp(m->argv, "julia") == 0 )
+	else if (ft_strcmp(m->argv, "julia") == 0)
 	{
 		if (m->img != NULL)
 			mlx_destroy_image(m->init, m->img);
 		julia(m);
 	}
-	else if (ft_strcmp(m->argv, "mandelbrot_three") == 0 )
+	else if (ft_strcmp(m->argv, "mandelbrot_three") == 0)
 	{
 		if (m->img != NULL)
 			mlx_destroy_image(m->init, m->img);
@@ -62,14 +61,13 @@ void    chose_fractal(t_frac *m)
 	}
 	else
 	{
-		printf("error: invalid argument!");
-		exit (0);
+		printf("error: invalid argument! please enter: mandelbrot | /\
+				julia | mandelbrot_three");
+		exit(0);
 	}
 }
 
-
-
-void	main_init(t_frac *win, char  **argv)
+void	main_init(t_frac *win, char **argv)
 {
 	win->m_x = 0;
 	win->m_y = 0;
@@ -84,11 +82,10 @@ void	main_init(t_frac *win, char  **argv)
 	win->init = mlx_init();
 	win->win = mlx_new_window(win->init, 800, 600, "fractol");
 	chose_fractal(win);
-	// mandelbrot(win);
 	mlx_expose_hook(win->win, expose, win);
 	mlx_key_hook(win->win, key_hook, win);
 	mlx_mouse_hook(win->win, mouse_hook, win);
-	mlx_hook(win->win, 6, (1L<<6), mouse_move, win); 
+	mlx_hook(win->win, 6, (1L << 6), mouse_move, win);
 	mlx_loop(win->init);
 }
 
@@ -104,4 +101,3 @@ int		main(int argc, char **argv)
 		init_mandle(&m);
 	main_init(&m, argv);
 }
-

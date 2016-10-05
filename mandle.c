@@ -6,13 +6,13 @@
 /*   By: tmack <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/30 07:27:40 by tmack             #+#    #+#             */
-/*   Updated: 2016/10/04 14:26:39 by tmack            ###   ########.fr       */
+/*   Updated: 2016/10/05 07:13:19 by tmack            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void    set_img(t_frac *m)
+void	set_img(t_frac *m)
 {
 	m->img = mlx_new_image(m->init, m->s_x_max, m->s_y_max);
 	m->data = mlx_get_data_addr(m->img, &(m->bpp), &(m->size),
@@ -20,9 +20,9 @@ void    set_img(t_frac *m)
 	m->s_y = -1;
 }
 
-void    calc_img(t_frac *m, double x)
+void	calc_img(t_frac *m, double x)
 {
-	m->w_x = 1.0 *  (m->s_x - m->s_x_max / 2) / x + m->pan_x;
+	m->w_x = 1.0 * (m->s_x - m->s_x_max / 2) / x + m->pan_x;
 	m->zx = 0.00;
 	m->zy = 0.00;
 	m->zx2 = m->zx * m->zx;
@@ -37,7 +37,7 @@ void    calc_img(t_frac *m, double x)
 	}
 }
 
-void    set_colour(t_frac *m)
+void	set_colour(t_frac *m)
 {
 	if (m->iterate < m->iterate_max)
 	{
@@ -56,7 +56,7 @@ void    set_colour(t_frac *m)
 	}
 }
 
-void        mandelbrot(t_frac *m)
+void	mandelbrot(t_frac *m)
 {
 	double	x;
 	double	y;
@@ -64,7 +64,7 @@ void        mandelbrot(t_frac *m)
 	x = 0.5 * m->zoom * m->s_x_max;
 	y = 0.5 * m->zoom * m->s_y_max;
 	set_img(m);
-	while(++m->s_y < m->s_y_max)
+	while (++m->s_y < m->s_y_max)
 	{
 		m->w_y = (m->s_y - m->s_x_max / 2) / y + m->pan_y;
 		m->s_x = -1;
@@ -76,4 +76,3 @@ void        mandelbrot(t_frac *m)
 	}
 	mlx_put_image_to_window(m->init, m->win, m->img, 0, 0);
 }
-
