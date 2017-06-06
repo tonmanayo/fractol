@@ -6,7 +6,7 @@
 /*   By: tmack <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/30 07:27:40 by tmack             #+#    #+#             */
-/*   Updated: 2016/10/05 07:13:19 by tmack            ###   ########.fr       */
+/*   Updated: 2016/10/05 07:46:34 by tmack            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	set_img(t_frac *m)
 
 void	calc_img(t_frac *m, double x)
 {
-	m->w_x = 1.0 * (m->s_x - m->s_x_max / 2) / x + m->pan_x;
+	m->w_x = 1.5 * (m->s_x - m->s_x_max / 2) / x + m->pan_x;
 	m->zx = 0.00;
 	m->zy = 0.00;
 	m->zx2 = m->zx * m->zx;
@@ -61,8 +61,8 @@ void	mandelbrot(t_frac *m)
 	double	x;
 	double	y;
 
-	x = 0.5 * m->zoom * m->s_x_max;
-	y = 0.5 * m->zoom * m->s_y_max;
+	x = 0.3 * m->zoom * m->s_x_max;
+	y = 0.3 * m->zoom * m->s_y_max;
 	set_img(m);
 	while (++m->s_y < m->s_y_max)
 	{

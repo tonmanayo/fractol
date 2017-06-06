@@ -6,7 +6,7 @@
 /*   By: tmack <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/30 07:40:42 by tmack             #+#    #+#             */
-/*   Updated: 2016/10/05 07:02:20 by tmack            ###   ########.fr       */
+/*   Updated: 2016/10/05 07:40:03 by tmack            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ void	chose_fractal(t_frac *m)
 	}
 	else
 	{
-		printf("error: invalid argument! please enter: mandelbrot | /\
-				julia | mandelbrot_three");
+		ft_putstr("error: invalid argument! please enter: ");
+		ft_putstr("mandelbrot | julia | mandelbrot_three \n");
 		exit(0);
 	}
 }
@@ -92,12 +92,15 @@ void	main_init(t_frac *win, char **argv)
 int		main(int argc, char **argv)
 {
 	t_frac	m;
-
-	if (ft_strcmp(argv[1], "julia") == 0)
-		init_julia(&m);
-	else if (ft_strcmp(argv[1], "mandelbrot") == 0)
-		init_mandle(&m);
-	else if (ft_strcmp(argv[1], "mandelbrot_three") == 0)
-		init_mandle(&m);
-	main_init(&m, argv);
+	if (argc == 2)
+	{
+		if (ft_strcmp(argv[1], "julia") == 0)
+			init_julia(&m);
+		else if (ft_strcmp(argv[1], "mandelbrot") == 0)
+			init_mandle(&m);
+		else if (ft_strcmp(argv[1], "mandelbrot_three") == 0)
+			init_mandle(&m);
+		main_init(&m, argv);
+	}
+	return (0);
 }
